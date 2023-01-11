@@ -1,0 +1,69 @@
+name: Enviando diretório para outro repositório
+description: >-
+  Útil para enviar arquivos para outro repositório a ser usado, por exemplo, via Github
+  Páginas
+inputs:
+  source-before-directory:
+    description: Fonte antes do diretório do diretório de origem
+    required: false
+  source-directory:
+    description: Diretório de origem do diretório de origem
+    required: true
+  destination-github-username:
+    description: Nome do nome de destino de destino/organizaçãoo
+    required: true
+  destination-repository-name:
+    description: Repositório de destino
+    required: true
+  user-email:
+    description: Email para o commit git
+    required: true
+  github-server:
+    description: "Github server"
+    default: "github.com"
+    required: false
+  user-name:
+    description: >-
+      [Opcional] Nome para o commit Git.Padrões para o destino
+      nome de usuário/nome da organizaçãoganização
+    required: false
+    default: ""
+  destination-repository-username:
+    description: "[Opcional] nome de usuário/organização para o repositório de destino "
+    required: false
+    default: ""
+  target-branch:
+    description: >-
+      [Opcional] Defina o nome da ramificação de destino para o repositório de destino.Padrões
+      para "Main"
+    default: main
+    required: false
+  commit-message:
+    description: >-
+      [Opcional] Compreenda a mensagem para o repositório de saída.Origem_commit é
+      substituído pelo URL@commit no repo Origin
+    default: Atualização de Origin_Commit
+    required: false
+  target-directory:
+    description: "[Opcional] O diretório para limpar e substituir no repositório de destino "
+    default: ""
+    required: false
+
+runs:
+  using: docker
+  image: Dockerfile
+  args:
+    - "${{ inputs.source-before-directory }}"
+    - "${{ inputs.source-directory }}"
+    - "${{ inputs.destination-github-username }}"
+    - "${{ inputs.destination-repository-name }}"
+    - "${{ inputs.github-server }}"
+    - "${{ inputs.user-email }}"
+    - "${{ inputs.user-name }}"
+    - "${{ inputs.destination-repository-username }}"
+    - "${{ inputs.target-branch }}"
+    - "${{ inputs.commit-message }}"
+    - "${{ inputs.target-directory }}"
+branding:
+  icon: git-commit
+  color: green
