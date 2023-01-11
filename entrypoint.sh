@@ -1,7 +1,7 @@
 #!/bin/sh -l
 
-set -e # if a command fails it stops the execution
-set -u # script fails if trying to access to an undefined variable
+set -e # Se um comando falhar, ele para a execução
+set -u # O script falha se estiver tentando acessar uma variável indefinida
 
 echo "[+] Action start"
 SOURCE_BEFORE_DIRECTORY="${1}"
@@ -24,8 +24,8 @@ if [ -z "$USER_NAME" ]; then
 	USER_NAME="$DESTINATION_GITHUB_USERNAME"
 fi
 
-# Verify that there (potentially) some access to the destination repository
-# and set up git (with GIT_CMD variable) and GIT_CMD_REPOSITORY
+# Verifique se lá (potencialmente) algum acesso ao repositório de destino
+# e configure git (com git_cmd variável) e git_cmd_repository
 if [ -n "${SSH_DEPLOY_KEY:=}" ]; then
 	echo "[+] Usando SSH_DEPLOY_KEY"
 
@@ -74,12 +74,12 @@ git config --global user.name "$USER_NAME"
 ls -la "$CLONE_DIR"
 
 TEMP_DIR=$(mktemp -d)
-# This mv has been the easier way to be able to remove files that were there
-# but not anymore. Otherwise we had to remove the files from "$CLONE_DIR",
-# including "." and with the exception of ".git/"
+# Este mv tem sido a maneira mais fácil de poder remover arquivos que estavam lá
+# mas não mais.Caso contrário, tivemos que remover os arquivos de "$ clone_dir",
+# Incluindo "."e com exceção de ".git/"
 mv "$CLONE_DIR/.git" "$TEMP_DIR/.git"
 
-# $TARGET_DIRECTORY is '' by default
+# $TARGET_DIRECTORY é '' por padrão
 ABSOLUTE_TARGET_DIRECTORY="$CLONE_DIR/$TARGET_DIRECTORY/"
 
 echo "[+] Deletando $ABSOLUTE_TARGET_DIRECTORY"
@@ -124,7 +124,7 @@ COMMIT_MESSAGE="${COMMIT_MESSAGE/\$GITHUB_REF/$GITHUB_REF}"
 
 echo "[+] Definir diretório é seguro ($CLONE_DIR)"
 # Related to https://github.com/cpina/github-action-push-to-another-repository/issues/64 and https://github.com/cpina/github-action-push-to-another-repository/issues/64
-# TODO: review before releasing it as a version
+# TODO: Revise antes de lançá -lo como uma versão
 git config --global --add safe.directory "$CLONE_DIR"
 
 echo "[+] Adicionando git commit"
@@ -134,9 +134,9 @@ echo "[+] git status:"
 git status
 
 echo "[+] git diff-index:"
-# git diff-index : to avoid doing the git commit failing if there are no changes to be commit
+# git diff-index : Para evitar o commit Git, falhar se não houver alterações a serem comprometidas
 git diff-index --quiet HEAD || git commit --message "$COMMIT_MESSAGE"
 
 echo "[+] Enviando git commit"
-# --set-upstream: sets de branch when pushing to a branch that does not exist
+# --set-upstream: Define De Branch ao enviar para um ramo que não existe
 git push "$GIT_CMD_REPOSITORY" --set-upstream "$TARGET_BRANCH"
